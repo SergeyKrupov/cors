@@ -85,27 +85,30 @@
             const $img = $imgs.shift();
             $img.crossOrigin='anonymous'
 
-            const $cnv = document.createElement('canvas');
-            $cnv.width = 190;
-            $cnv.height = 190;
-            const ctx = $cnv.getContext('2d');
+            setTimeout(() => {
+                const $cnv = document.createElement('canvas');
+                $cnv.width = 190;
+                $cnv.height = 190;
+                const ctx = $cnv.getContext('2d');
 
-            try {
-                ctx.drawImage($img, 0, 0, 200, 200);
-                $drawnImages.appendChild($cnv);
-            } catch (e) {
-                log('<b>Error draw</b> ' + $img.src + ': ' + e.message)
-            }
+                try {
+                    ctx.drawImage($img, 0, 0, 200, 200);
+                    $drawnImages.appendChild($cnv);
+                } catch (e) {
+                    log('<b>Error draw</b> ' + $img.src + ': ' + e.message)
+                }
 
-            try {
-                ctx.getImageData(0, 0, 1, 1);
-                log('<b>Success</b> ' + $img.src);
-            } catch (e) {
-                log('<b>Reading error</b> ' + $img.src + ': ' + e.message)
-            }
+                try {
+                    ctx.getImageData(0, 0, 1, 1);
+                    log('<b>Success</b> ' + $img.src);
+                } catch (e) {
+                    log('<b>Reading error</b> ' + $img.src + ': ' + e.message)
+                }
 
-            if ($imgs.length) next();
+                if ($imgs.length) next();
+            }, 1000)
         }
+            
 
         next();
     }
