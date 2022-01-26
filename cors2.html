@@ -83,6 +83,7 @@
 
         const next = () => {
             const $img = $imgs.shift();
+            $img.crossOrigin='anonymous'
 
             const $cnv = document.createElement('canvas');
             $cnv.width = 190;
