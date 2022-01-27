@@ -82,24 +82,25 @@
     function checkImage() {
         var img = new Image();
         img.src = 'https://i.imgur.com/Uschheg.jpeg?' + new Date().getTime();
+        img.onload = function() {
+            const $cnv = document.createElement('canvas');
+            $cnv.width = 190;
+            $cnv.height = 190;
+            const ctx = $cnv.getContext('2d');
 
-        const $cnv = document.createElement('canvas');
-        $cnv.width = 190;
-        $cnv.height = 190;
-        const ctx = $cnv.getContext('2d');
+            try {
+                ctx.drawImage(img, 0, 0, 200, 200);
+                $drawnImages.appendChild($cnv);
+            } catch (e) {
+                log('<b>Error draw (checkImage())</b> ' + img.src + ': ' + e.message)
+            }
 
-        try {
-            ctx.drawImage(img, 0, 0, 200, 200);
-            $drawnImages.appendChild($cnv);
-        } catch (e) {
-            log('<b>Error draw (checkImage())</b> ' + img.src + ': ' + e.message)
-        }
-
-        try {
-            ctx.getImageData(0, 0, 1, 1);
-            log('<b>Success(checkImage())</b> ' + img.src);
-        } catch (e) {
-            log('<b>Reading error(checkImage())</b> ' + img.src + ': ' + e.message)
+            try {
+                ctx.getImageData(0, 0, 1, 1);
+                log('<b>Success(checkImage())</b> ' + img.src);
+            } catch (e) {
+                log('<b>Reading error(checkImage())</b> ' + img.src + ': ' + e.message)
+            }
         }
     }
 
