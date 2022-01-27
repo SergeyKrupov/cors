@@ -54,7 +54,8 @@
 
 <div class="input-container">
     <button onclick="drawImages()">Draw images on canvas and read data</button>
-    <button onclick="checkImage()">Test new image</button>
+    <button onclick="checkImage('https\://i.imgur.com/Uschheg.jpeg')">Test new image 1</button>
+    <button onclick="checkImage('https\://i.imgur.com/JOKsNeT.jpeg')">Test new image 2</button>
 </div>
 
 <h4>Drawn images</h4>
@@ -79,9 +80,12 @@
 
     //https://i.imgur.com/Uschheg.jpeg
 
-    function checkImage() {
+    //https://i.imgur.com/JOKsNeT.jpeg
+
+
+    function checkImage(url) {
         var img = new Image();
-        img.src = 'https://i.imgur.com/Uschheg.jpeg?' + new Date().getTime();
+        img.src = url //'https://i.imgur.com/Uschheg.jpeg?' + new Date().getTime();
         img.onload = function() {
             const $cnv = document.createElement('canvas');
             $cnv.width = 190;
