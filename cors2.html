@@ -54,6 +54,7 @@
 
 <div class="input-container">
     <button onclick="drawImages()">Draw images on canvas and read data</button>
+    <button onclick="checkImage()">Test new image</button>
 </div>
 
 <h4>Drawn images</h4>
@@ -75,6 +76,32 @@
         $log.innerHTML += '[' + d.toLocaleTimeString() + '] ' + log + "\n";
 
     };
+
+    //https://i.imgur.com/Uschheg.jpeg
+
+    function checkImage() {
+        var img = new Image();
+        img.src = 'https://i.imgur.com/Uschheg.jpeg'
+
+        const $cnv = document.createElement('canvas');
+        $cnv.width = 190;
+        $cnv.height = 190;
+        const ctx = $cnv.getContext('2d');
+
+        try {
+            ctx.drawImage($img, 0, 0, 200, 200);
+            $drawnImages.appendChild($cnv);
+        } catch (e) {
+            log('<b>Error draw (checkImage())</b> ' + $img.src + ': ' + e.message)
+        }
+
+        try {
+            ctx.getImageData(0, 0, 1, 1);
+            log('<b>Success(checkImage())</b> ' + $img.src);
+        } catch (e) {
+            log('<b>Reading error(checkImage())</b> ' + $img.src + ': ' + e.message)
+        }
+    }
 
     function drawImages() {
         $drawnImages.innerHTML = '';
