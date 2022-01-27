@@ -92,14 +92,14 @@
             ctx.drawImage($img, 0, 0, 200, 200);
             $drawnImages.appendChild($cnv);
         } catch (e) {
-            log('<b>Error draw (checkImage())</b> ' + $img.src + ': ' + e.message)
+            log('<b>Error draw (checkImage())</b> ' + img.src + ': ' + e.message)
         }
 
         try {
             ctx.getImageData(0, 0, 1, 1);
-            log('<b>Success(checkImage())</b> ' + $img.src);
+            log('<b>Success(checkImage())</b> ' + img.src);
         } catch (e) {
-            log('<b>Reading error(checkImage())</b> ' + $img.src + ': ' + e.message)
+            log('<b>Reading error(checkImage())</b> ' + img.src + ': ' + e.message)
         }
     }
 
