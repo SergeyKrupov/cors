@@ -6,14 +6,11 @@
  </head>
  <body>
     <script type="text/javascript">
-        document.write ('<table width="100%" border="1">');
-            for (i=1; i<6; i++) {
-                document.writeln("<tr>");
-                for (j=1; j<6; j++) document.write("<td>" + i + j + "<\/td>");
-                document.writeln("<\/tr>");
-            }
-        document.write ("<\/table> ");
+        function openURL() {
+            const url = "https://www.google.com";
+            window.location = url;
+        };
     </script>
-  <p style="text-align: center"><button>Кнопка с текстом</button>
+  <p style="text-align: center" onclick="openURL()"><button>Кнопка с текстом</button>
  </body>
 </html>
