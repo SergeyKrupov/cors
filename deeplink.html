@@ -48,8 +48,13 @@
             const url = "portal-ptr-x://?delay=4000"
             window.open(url);
         };
+        function refreshPortal2() {
+            const url = "portal-ptr-x%3A%2F%2F%3Fdelay%3D4000"
+            window.open(url);
+        }
     </script>
   <p style="text-align: center" onclick="openViewport()"><button>Viewport</button>
   <p style="text-align: center" onclick="refreshPortal()"><button>Refresh portal</button>
+  <p style="text-align: center" onclick="refreshPortal2()"><button>Refresh portal 2</button>
  </body>
 </html>
