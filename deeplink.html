@@ -40,12 +40,16 @@
     </head>
  <body>
     <script type="text/javascript">
-        function openURL() {
+        function openViewport() {
             const url = "viewport://?text=Foo&viewport_id=serp";
-            //const url = "portal-ptr-x://?delay=4000"
+            window.open(url);
+        };
+        function refreshPortal() {
+            const url = "portal-ptr-x://?delay=4000"
             window.open(url);
         };
     </script>
-  <p style="text-align: center" onclick="openURL()"><button>Update portal</button>
+  <p style="text-align: center" onclick="openViewport()"><button>Viewport</button>
+  <p style="text-align: center" onclick="refreshPortal()"><button>Refresh portal</button>
  </body>
 </html>
