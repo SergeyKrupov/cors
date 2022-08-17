@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Deelpink</title>
+    
+        <style>
+            .generated-images3 {
+                position: fixed;
+                left: -9999px;
+                top: -9999px;
+                width: 1px;
+                height: 1px;
+            }
+            .orig-images {
+                font-size: 0;
+            }
+    
+            .log {
+                white-space: pre-wrap;
+            }
+    
+            img {
+                min-height: 50px;
+                min-width: 50px;
+                max-width: 200px;
+                max-height: 200px;
+                background: #eee;
+                margin: 0 10px 10px 0;
+                border: 1px solid #888;
+            }
+    
+            canvas {
+                margin-right: 10px;
+            }
+        </style>
+    </head>
+ <body>
+    <script type="text/javascript">
+        function markAllStateful() {
+            yandex.stateful.markAllStatefulNavigations('Foo', 'Bar', ['ru.wikipedia.org'])
+        };
+    </script>
+  <p style="text-align: center" onclick="markAllStateful()"><button>Viewport</button>
+ </body>
+</html>
