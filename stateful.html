@@ -44,7 +44,24 @@
             yandex.stateful.markAllStatefulNavigations('Foo', 'Bar', ['ru.wikipedia.org'])
         };
     </script>
-  <p style="text-align: center" onclick="markAllStateful()"><button>Viewport</button>
+<p style="text-align: center">
+    <button onclick="yandex.stateful.markAllStatefulNavigations('tag1', 'Title1', ['en.wikipedia.org'])">
+        en.wikipedia.org
+    </button>
+</p>
+   
+<p style="text-align: center">
+    <button onclick="yandex.stateful.markAllStatefulNavigations('tag2', 'Title2', ['en.wikipedia.org/wiki'])">
+        en.wikipedia.org/wiki
+    </button>
+</p>
+
+<p style="text-align: center">
+    <button onclick="yandex.stateful.markAllStatefulNavigations('tag3', 'Title3', ['en.wikipedia.org/wiki/Main_Page'])">
+        en.wikipedia.org/wiki/Main_Page
+    </button>
+</p>
+
   <p><a href="https://en.wikipedia.org/wiki/Main_Page">https://en.wikipedia.org/wiki/Main_Page</a></p>
   <p><a href="https://en.wikipedia.org/wiki/2022_Cetinje_shooting">https://en.wikipedia.org/wiki/2022_Cetinje_shooting</a></p>
  </body>
