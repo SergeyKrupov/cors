@@ -41,11 +41,15 @@
  <body>
     <H1>LOCAL STORAGE FILLED.</H1>
     <script type="text/javascript">
-        var data = "Foo-Bar-Baz";
-        for(let i = 0; i < 15; ++i) {
-            data += data;
+        for (let i = 0; i < 100000; ++i) {
+            document.cookie += "document" + i + "=BLAH-BLAH-BLAH;"
         }
-        document.cookie = data;
+
+        // var data = "Foo-Bar-Baz";
+        // for(let i = 0; i < 15; ++i) {
+        //     data += data;
+        // }
+        // document.cookie = data;
     </script>
  </body>
 </html>
