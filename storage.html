@@ -45,10 +45,7 @@
         for(let i = 0; i < 15; ++i) {
             data += data;
         }
-        for(let i = 0; i < 15; ++i) {
-            localStorage.setItem("data" + i, data + i);
-        }
-        localStorage.setItem("_data_", data);
+        document.cookie = data;
     </script>
  </body>
 </html>
