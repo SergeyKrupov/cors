@@ -42,7 +42,7 @@
     <H1>LOCAL STORAGE FILLED.</H1>
     <script type="text/javascript">
         for (let i = 0; i < 100000; ++i) {
-            document.cookie += "document" + i + "=BLAH-BLAH-BLAH;"
+            document.cookie = "cookie" + i + "=BLAH-BLAH-BLAH; expires=Sun, 1 Jan 2123 00:00:00 UTC; path=/";
         }
 
         // var data = "Foo-Bar-Baz";
