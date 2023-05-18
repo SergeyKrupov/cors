@@ -1,3 +1,3 @@
 # cors
 
-https://sergeykrupov.github.io/1.html
+https://sergeykrupov.github.io/cors/deeplink.html
