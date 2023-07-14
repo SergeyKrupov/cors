@@ -40,9 +40,6 @@
     </head>
  <body>
     <script type="text/javascript">
-        function checkCanSummarizeCallback(items) {
-          window.alert(items)
-        }
         function checkCanSummarize() {
           const items = [
             {
@@ -54,7 +51,15 @@
               "hasSubtitles": false
             }
           ];
-          yandex.videoSummarization.checkCanSummarize(items, checkCanSummarizeCallback)
+          yandex.videoSummarization.checkCanSummarize(items)
+          .then((value) => {
+            console.log(value);
+            window.alert(value);
+          })
+          .catch((err) => {
+            console.error(err);
+            window.alert(err)
+          });
         }
     </script>
   <p style="text-align: center" onclick="checkCanSummarize()"><button>checkCanSummarize</button>
