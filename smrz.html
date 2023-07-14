@@ -61,6 +61,31 @@
             window.alert(err)
           });
         }
+
+        function summarize() {
+          const rect = {
+            "x": 10,
+            "y": 20,
+            "width": 100,
+            "height": 200
+          };
+          const subtitles = [
+            {
+              "url": "https://ya.ru",
+              "languageCode": "ru"
+            },
+            {
+              "url": "https://google.com",
+              "languageCode": "en"
+            },
+            {
+              "url": "https://apple.com",
+              "languageCode": "ru"
+            }
+          ];
+          yandex.videoSummarization.checkCanSummarize("FooBar", rect, subtitles);
+        }
+
     </script>
   <p style="text-align: center" onclick="checkCanSummarize()"><button>checkCanSummarize</button>
  </body>
