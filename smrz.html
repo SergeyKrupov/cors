@@ -90,7 +90,7 @@
           function callback(video_id, enabled) {
             window.alert(video_id + "→" + enabled);
           };
-          yandex.videoSummarization.bubbleVisibilityChanged(callback);
+          yandex.videoSummarization.bubbleVisibilityChanged.addListener(callback);
         }
 
     </script>
