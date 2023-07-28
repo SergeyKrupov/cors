@@ -87,12 +87,14 @@
         };
 
         function bubbleVisibilityChanged() {
-          function callback(video_id, enabled) {
-            window.alert(video_id + "→" + enabled);
-          };
-          yandex.videoSummarization.bubbleVisibilityChanged.addListener(callback);
-
-          window.alert("!!!");
+          yandex.videoSummarization.bubbleVisibilityChanged.addListener(
+            (video_id, enabled) => {
+              setTimeout(() => {
+                window.alert(video_id + "→" + enabled);
+                console.log("Ta-dam!");
+              }, "7000");
+            }
+          );
         }
 
     </script>
