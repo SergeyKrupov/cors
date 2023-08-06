@@ -71,19 +71,22 @@
           };
           const subtitles = [
             {
-              "url": "https://ya.ru",
-              "languageCode": "ru"
+              "text": "Foo",
+              "start": 0,
+              "end": 5
             },
             {
-              "url": "https://google.com",
-              "languageCode": "en"
+              "text": "Bar",
+              "start": 5,
+              "end": 10
             },
             {
-              "url": "https://apple.com",
-              "languageCode": "ru"
+              "text": "Baz",
+              "start": 10,
+              "end": 15
             }
           ];
-          yandex.videoSummarization.summarize("FooBar", rect, subtitles);
+          yandex.videoSummarization.summarize("https://foo.bar", "video", rect, subtitles);
         };
 
         function bubbleVisibilityChanged() {
