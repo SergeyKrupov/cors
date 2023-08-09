@@ -86,7 +86,14 @@
               "end": 15
             }
           ];
-          yandex.videoSummarization.summarize("https://foo.bar", "video", rect, subtitles);
+          const info = {
+            "videoId": "https://foo.bar",
+            "videoTitle": "_Title_",
+            "summarizationType": "video",
+            "summarizationTargetRect": rect,
+            "subtitles": subtitles
+          };
+          yandex.videoSummarization.summarize(info);
         };
 
         function bubbleVisibilityChanged() {
