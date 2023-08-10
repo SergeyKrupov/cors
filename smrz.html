@@ -132,13 +132,16 @@
         }
 
         function legacySummarize() {
-          const rect = {
+          yandex.videoSummarization.summarize(
+            "https://m.youtube.com/watch?v=xfgBijPAR6s",
+            "video",
+            {
             "x": 10,
             "y": 20,
             "width": 100,
             "height": 200
-          };
-          const subtitles = [
+          }, 
+          [
             {
               "text": "Foo",
               "start": 0,
@@ -154,8 +157,7 @@
               "start": 10,
               "end": 15
             }
-          ];
-          yandex.videoSummarization.summarize("https://foo.bar", "video", rect, subtitles);
+          ]);
         };
 
     </script>
