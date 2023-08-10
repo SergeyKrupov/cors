@@ -63,35 +63,33 @@
         };
 
         function summarize() {
-          const rect = {
-            "x": 10,
-            "y": 20,
-            "width": 100,
-            "height": 200
-          };
-          const subtitles = [
-            {
-              "text": "Foo",
-              "start": 0,
-              "end": 5
-            },
-            {
-              "text": "Bar",
-              "start": 5,
-              "end": 10
-            },
-            {
-              "text": "Baz",
-              "start": 10,
-              "end": 15
-            }
-          ];
           const info = {
             "videoId": "https://foo.bar",
             "videoTitle": "_Title_",
             "summarizationType": "video",
-            "summarizationTargetRect": rect,
-            "subtitles": subtitles
+            "summarizationTargetRect": {
+              "x": 10,
+              "y": 20,
+              "width": 100,
+              "height": 200
+            },
+            "subtitles": [
+              {
+                "text": "Foo",
+                "start": 0,
+                "end": 5
+              },
+              {
+                "text": "Bar",
+                "start": 5,
+                "end": 10
+              },
+              {
+                "text": "Baz",
+                "start": 10,
+                "end": 15
+              }
+            ]
           };
           yandex.videoSummarization.summarize(info);
         };
