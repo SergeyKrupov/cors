@@ -131,9 +131,37 @@
           )
         }
 
+        function legacySummarize() {
+          const rect = {
+            "x": 10,
+            "y": 20,
+            "width": 100,
+            "height": 200
+          };
+          const subtitles = [
+            {
+              "text": "Foo",
+              "start": 0,
+              "end": 5
+            },
+            {
+              "text": "Bar",
+              "start": 5,
+              "end": 10
+            },
+            {
+              "text": "Baz",
+              "start": 10,
+              "end": 15
+            }
+          ];
+          yandex.videoSummarization.summarize("https://foo.bar", "video", rect, subtitles);
+        };
+
     </script>
   <p style="text-align: center" onclick="checkCanSummarize()"><button>checkCanSummarize</button></p>
   <p style="text-align: center" onclick="summarize()"><button>summarize</button></p>
+  <p style="text-align: center" onclick="legacySummarize()"><button>legacy summarize</button></p>
   <p style="text-align: center" onclick="bubbleVisibilityChanged()"><button>bubbleVisibilityChanged</button></p>
   <p style="text-align: center" onclick="maybeShowPromo()"><button>maybeShowPromo</button></p>
  </body>
