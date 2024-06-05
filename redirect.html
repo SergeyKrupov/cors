@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+              content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta http-equiv="refresh" content="1; URL=neuralsearch://?initial_input=%D0%BA%D0%B0%D0%BA%20%D0%B2%D0%B0%D1%80%D0%B8%D1%82%D1%8C%20%D1%80%D0%B8%D1%81" />
+
+        <title>Deeplink</title>
+    
+        <link rel="alternate" href="neuralsearch://?initial_input=%D0%9A%D0%BE%D0%BB%D0%BB%D0%B5%D0%B3%D0%B0%2C%20%D0%B5%D1%81%D0%BB%D0%B8%20%D1%82%D1%8B%20%D1%82%D1%8B%20%D1%8D%D1%82%D0%BE%20%D1%87%D0%B8%D1%82%D0%B0%D0%B5%D1%88%D1%8C%2C%20%D0%B7%D0%BD%D0%B0%D1%87%D0%B8%D1%82%20%D0%B2%D1%81%D0%B5%20%D0%BE%D0%BA" hrefLang="ru" />
+        <link rel="alternate" href="neuralsearch://?initial_input=%D0%9A%D0%BE%D0%BB%D0%BB%D0%B5%D0%B3%D0%B0%2C%20%D0%B5%D1%81%D0%BB%D0%B8%20%D1%82%D1%8B%20%D1%82%D1%8B%20%D1%8D%D1%82%D0%BE%20%D1%87%D0%B8%D1%82%D0%B0%D0%B5%D1%88%D1%8C%2C%20%D0%B7%D0%BD%D0%B0%D1%87%D0%B8%D1%82%20%D0%B2%D1%81%D0%B5%20%D0%BE%D0%BA" hrefLang="ru-RU" />
+        
+        <style>
+            .generated-images3 {
+                position: fixed;
+                left: -9999px;
+                top: -9999px;
+                width: 1px;
+                height: 1px;
+            }
+            .orig-images {
+                font-size: 0;
+            }
+    
+            .log {
+                white-space: pre-wrap;
+            }
+    
+            img {
+                min-height: 50px;
+                min-width: 50px;
+                max-width: 200px;
+                max-height: 200px;
+                background: #eee;
+                margin: 0 10px 10px 0;
+                border: 1px solid #888;
+            }
+    
+            canvas {
+                margin-right: 10px;
+            }
+        </style>
+    </head>
+ <body>
+    <script type="text/javascript">
+        function openViewport() {
+            const url = "viewport://?text=Foo&viewport_id=serp";
+            window.open(url);
+        };
+        function refreshPortal() {
+            const url = "portal-ptr://?delay=4000"
+            window.open(url);
+        };
+        function refreshPortal2() {
+            const url = "ya-search-app-open://?uri=portal-ptr%3A%2F%2F%3Fdelay%3D4000"
+            window.open(url);
+        }
+        function openNeuro() {
+            const url = "neuralsearch://?initial_input=%D0%BA%D0%B0%D0%BA%20%D0%B2%D0%B0%D1%80%D0%B8%D1%82%D1%8C%20%D1%80%D0%B8%D1%81"
+            window.open(url);
+        }
+        function openNeuroOnboarding() {
+            const url = "neuralsearch://blahblah"
+            window.open(url);
+        }
+        function openChatBro() {
+            const url = "neuralsearch://?initial_input=%D0%BA%D0%B0%D0%BA%20%D0%B2%D0%B0%D1%80%D0%B8%D1%82%D1%8C%20%D1%80%D0%B8%D1%81"
+            document.location.href = url
+        }
+    </script>
+  <p style="text-align: center" onclick="openViewport()"><button>Viewport</button></p>
+  <p style="text-align: center" onclick="refreshPortal()"><button>Refresh portal</button></p>
+  <p style="text-align: center" onclick="refreshPortal2()"><button>Refresh portal 2</button></p>
+  <p style="text-align: center" onclick="openNeuro()"><button>Open neuro</button></p>
+  <p style="text-align: center" onclick="openNeuroOnboarding()"><button>Open neuro onboarding</button></p>
+  <p style="text-align: center"><a href="neuralsearch://?initial_input=%D0%9A%D0%BE%D0%BB%D0%BB%D0%B5%D0%B3%D0%B0%2C%20%D0%B5%D1%81%D0%BB%D0%B8%20%D1%82%D1%8B%20%D1%8D%D1%82%D0%BE%20%D1%87%D0%B8%D1%82%D0%B0%D0%B5%D1%88%D1%8C%2C%20%D0%B7%D0%BD%D0%B0%D1%87%D0%B8%D1%82%20%D0%B2%D1%81%D0%B5%20%D0%BE%D0%BA" target="_self">🧠</a></p>
+  <p style="text-align: center"><a href="neuralsearch://?initial_input=%D0%BA%D0%B0%D0%BA%20%D0%B2%D0%B0%D1%80%D0%B8%D1%82%D1%8C%20%D1%80%D0%B8%D1%81">Chat link</a></p>
+  <p style="text-align: center" onclick="openChatBro()"><button>openChatBro</button></p>
+
+
+ </body>
+</html>
