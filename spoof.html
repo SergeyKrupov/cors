@@ -7,18 +7,15 @@
     <meta http-equiv="Expires" content="0">
 </head>
 <body>
+    <!-- https://sergeykrupov.github.io/cors/spoof.html -->
+
     <!-- <script>
     var exp = 'Sergey (1) <script>history.replaceState("","","foo-bar.html")<\/script>';
     location=URL.createObjectURL(new Blob([exp], {type: "text/html"}))
     </script> -->
 
-    <!-- <script>
-    var exp = 'Sergey (2) <script>history.replaceState("","","http://foo-bar.html")<\/script>';
-    location=URL.createObjectURL(new Blob([exp], {type: "text/html"}))
-    </script> -->
-
     <script>
-    var exp = 'Sergey (4) <script>history.replaceState("","","blob:http://ya.ru@http://foo-bar.html")<\/script>';
+    var exp = 'Sergey (4) <script>history.replaceState("","","blob:http://ya.ru @http://' + location.host + '/")<\/script>';
     location=URL.createObjectURL(new Blob([exp], {type: "text/html"}))
     </script>
 </body>
