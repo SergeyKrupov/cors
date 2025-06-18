@@ -3,7 +3,12 @@ var exp = 'Sergey (1) <script>history.replaceState("","","foo-bar.html")<\/scrip
 location=URL.createObjectURL(new Blob([exp], {type: "text/html"}))
 </script> -->
 
-<script>
+<!-- <script>
 var exp = 'Sergey (2) <script>history.replaceState("","","http://foo-bar.html")<\/script>';
+location=URL.createObjectURL(new Blob([exp], {type: "text/html"}))
+</script> -->
+
+<script>
+var exp = 'Sergey (3) <script>history.replaceState("","","blob:http://foo-bar.html")<\/script>';
 location=URL.createObjectURL(new Blob([exp], {type: "text/html"}))
 </script>
