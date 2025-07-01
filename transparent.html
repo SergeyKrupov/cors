@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прозрачный фон</title>
+    <style>
+        /* Убираем отступы по умолчанию у браузера */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%; /* Важно для корректной работы высоты body */
+        }
+        
+        body {
+            /* 1. Делаем фон прозрачным */
+            background-color: transparent;
+
+            /* 2. Центрируем содержимое с помощью Flexbox */
+            display: flex;
+            justify-content: center; /* Центрирование по горизонтали */
+            align-items: center;   /* Центрирование по вертикали */
+            
+            /* Задаем высоту тела документа равной 100% высоты окна браузера */
+            height: 100vh; 
+        }
+
+        h1 {
+            /* Стили для текста (можно изменить) */
+            font-family: Arial, sans-serif;
+            font-size: 3rem;
+            color: #333; /* Темно-серый цвет текста */
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Текст по центру</h1>
+
+</body>
+</html>
