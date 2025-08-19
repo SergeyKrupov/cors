@@ -9,10 +9,6 @@
       и браузер предоставил значения для safe-area-inset-*.
     -->
     
-    <!--
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    -->
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
     <title>Тест CSS env() переменных</title>
@@ -22,7 +18,7 @@
         html, body {
             margin: 0;
             padding: 0;
-            height: 100%;
+            height: 120%;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             color: #333;
         }
@@ -46,7 +42,7 @@
             align-items: center;
             box-sizing: border-box;
             height: 100%;
-            background-color: #e0f7fa; /* Голубой фон для наглядности */
+            background-color: #ff0000; /* Голубой фон для наглядности */
             
             /* Применяем наши переменные, чтобы контент не заезжал под "челку" */
             padding-top: var(--safe-top);
