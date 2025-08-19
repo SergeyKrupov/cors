@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    
+    <!-- 
+      ШАГ 1: Включаем поддержку env() переменных.
+      viewport-fit=cover - это ключ к тому, чтобы страница заняла всю область экрана,
+      и браузер предоставил значения для safe-area-inset-*.
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    
+    <title>Тест CSS env() переменных</title>
+
+    <style>
+        /* Убираем отступы по умолчанию */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #333;
+        }
+
+        /* 
+          ШАГ 2: Определяем кастомные CSS-свойства, которые "захватывают" значения env().
+          Это самый удобный способ для последующего чтения их из JS.
+          Если env() не поддерживается, будет использовано резервное значение (0px).
+        */
+        :root {
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-left: env(safe-area-inset-left, 0px);
+            --safe-right: env(safe-area-inset-right, 0px);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Распределяем контент по вертикали */
+            align-items: center;
+            box-sizing: border-box;
+            height: 100%;
+            background-color: #e0f7fa; /* Голубой фон для наглядности */
+            
+            /* Применяем наши переменные, чтобы контент не заезжал под "челку" */
+            padding-top: var(--safe-top);
+            padding-bottom: var(--safe-bottom);
+            padding-left: var(--safe-left);
+            padding-right: var(--safe-right);
+        }
+
+        .content-block {
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            text-align: center;
+            width: 90%;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        pre {
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            white-space: pre-wrap; /* Для переноса строк */
+            word-wrap: break-word; /* Для переноса длинных слов */
+            text-align: left;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="content-block">
+            Этот контент находится вверху безопасной зоны.
+        </div>
+
+        <div class="content-block">
+            <button id="showValuesBtn">Показать значения env()</button>
+            <pre id="results">Нажмите на кнопку, чтобы увидеть результат.</pre>
+        </div>
+        
+        <div class="content-block">
+            А этот — внизу.
+        </div>
+    </div>
+
+    <script>
+        // ШАГ 3: Получаем доступ к значениям из JavaScript
+        
+        // Находим кнопку и элемент для вывода результата
+        const showBtn = document.getElementById('showValuesBtn');
+        const resultsEl = document.getElementById('results');
+
+        /**
+         * Функция читает вычисленные значения кастомных CSS-свойств,
+         * в которых мы сохранили значения env().
+         */
+        function getSafeAreaInsets() {
+            // :root — это псевдо-класс для элемента <html>
+            const root = document.documentElement;
+            // Получаем объект всех вычисленных стилей для этого элемента
+            const computedStyle = getComputedStyle(root);
+
+            // Читаем значения наших переменных
+            const safeArea = {
+                top: computedStyle.getPropertyValue('--safe-top').trim(),
+                bottom: computedStyle.getPropertyValue('--safe-bottom').trim(),
+                left: computedStyle.getPropertyValue('--safe-left').trim(),
+                right: computedStyle.getPropertyValue('--safe-right').trim(),
+            };
+            
+            return safeArea;
+        }
+
+        // Добавляем обработчик события на клик по кнопке
+        showBtn.addEventListener('click', () => {
+            const values = getSafeAreaInsets();
+            
+            // Преобразуем объект в красивую JSON-строку и выводим
+            resultsEl.textContent = JSON.stringify(values, null, 2);
+        });
+
+    </script>
+</body>
+</html>
