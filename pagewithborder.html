@@ -2,8 +2,8 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Страница с рамкой и полем ввода</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Страница с камерой</title>
     <style>
         * {
             margin: 0;
@@ -12,49 +12,58 @@
         }
 
         body {
-            background-color: #cccccc; /* Серый фон */
-            border: 10px solid red;    /* Красная рамка */
-            min-height: 100vh;         /* Минимальная высота = высоте окна */
-            padding: 20px;
+            /* Основные стили страницы */
+            background-color: #808080; /* Серый фон */
+            min-height: 100vh;
+            border: 5px solid red; /* Красная рамка */
             display: flex;
-            justify-content: center;   /* Горизонтальное центрирование */
-            align-items: center;       /* Вертикальное центрирование */
-            font-family: Arial, sans-serif;
+            justify-content: center;
+            align-items: center;
+            padding: env(safe-area-inset-top) env(safe-area-inset-right) 
+                     env(safe-area-inset-bottom) env(safe-area-inset-left);
+            
+            /* Обработка областей камеры */
+            position: relative;
         }
 
-        .center-container {
-            text-align: center;
-            width: 100%;
-            max-width: 400px;
+        /* Синие области для зон камеры (динамические) */
+        body::before {
+            content: '';
+            position: fixed;
+            z-index: 1;
+            background: blue;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: env(safe-area-inset-top);
+        }
+
+        /* Центральное поле ввода */
+        .input-container {
+            position: relative;
+            z-index: 2;
         }
 
         input {
-            width: 100%;
-            padding: 15px;
-            font-size: 18px;
+            padding: 15px 25px;
+            font-size: 1.2em;
             border: 2px solid #333;
             border-radius: 8px;
-            margin-bottom: 20px;
+            width: 300px;
             text-align: center;
         }
 
-        input:focus {
-            outline: none;
-            border-color: #ff0000;
-            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-        }
-
-        .title {
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 24px;
+        /* Адаптация для разных ориентаций */
+        @media (max-width: 768px) {
+            input {
+                width: 80vw;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="center-container">
-        <h1 class="title">Введите текст</h1>
-        <input type="text" placeholder="Начните вводить здесь...">
+    <div class="input-container">
+        <input type="text" placeholder="Введите текст">
     </div>
 </body>
 </html>
