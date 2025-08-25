@@ -11,59 +11,52 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
         body {
-            /* Основные стили страницы */
-            background-color: #808080; /* Серый фон */
-            min-height: 100vh;
-            border: 5px solid red; /* Красная рамка */
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            /* Синий фон для областей камеры */
+            background-color: blue;
+            
+            /* Серый контейнер с отступами безопасности */
             padding: env(safe-area-inset-top) env(safe-area-inset-right) 
                      env(safe-area-inset-bottom) env(safe-area-inset-left);
             
-            /* Обработка областей камеры */
-            position: relative;
+            /* Красная рамка внутри безопасной зоны */
+            border: 5px solid red;
+            
+            /* Серый фон основной области */
+            background-color: #808080;
+            
+            /* Центрирование контента */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
 
-        /* Синие области для зон камеры (динамические) */
-        body::before {
-            content: '';
-            position: fixed;
-            z-index: 1;
-            background: blue;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: env(safe-area-inset-top);
-        }
-
-        /* Центральное поле ввода */
+        /* Контейнер для поля ввода */
         .input-container {
-            position: relative;
-            z-index: 2;
-        }
-
-        input {
-            padding: 15px 25px;
-            font-size: 1.2em;
-            border: 2px solid #333;
-            border-radius: 8px;
-            width: 300px;
             text-align: center;
         }
 
-        /* Адаптация для разных ориентаций */
-        @media (max-width: 768px) {
-            input {
-                width: 80vw;
-            }
+        input {
+            padding: 20px 30px;
+            font-size: 1.2em;
+            border: 2px solid #333;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="input-container">
-        <input type="text" placeholder="Введите текст">
+        <input type="text" placeholder="Введите текст здесь">
     </div>
 </body>
 </html>
