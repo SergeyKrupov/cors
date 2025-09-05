@@ -176,6 +176,7 @@
 
     <script>
         let currentImageUrl = '';
+        let currentImageElement = null; // Сохраняем ссылку на загруженное изображение
 
         // Функция для получения случайной картинки
         function getRandomImageUrl() {
@@ -201,9 +202,11 @@
             
             // Создаем новый элемент изображения
             const img = new Image();
+            img.crossOrigin = 'anonymous'; // Устанавливаем CORS для загрузки
             
             img.onload = function() {
-                imageContainer.innerHTML = `<img id="randomImage" src="${currentImageUrl}" alt="Случайная картинка">`;
+                imageContainer.innerHTML = `<img id="randomImage" src="${currentImageUrl}" alt="Случайная картинка" crossorigin="anonymous">`;
+                currentImageElement = img; // Сохраняем ссылку на загруженное изображение
                 newImageBtn.disabled = false;
                 newImageBtn.textContent = '🔄 Новая картинка';
                 console.log('✅ Картинка загружена:', currentImageUrl);
@@ -211,6 +214,7 @@
             
             img.onerror = function() {
                 imageContainer.innerHTML = '<div class="loading">❌ Ошибка загрузки. Попробуйте еще раз.</div>';
+                currentImageElement = null; // Сбрасываем при ошибке
                 newImageBtn.disabled = false;
                 newImageBtn.textContent = '🔄 Новая картинка';
                 console.error('❌ Ошибка загрузки картинки:', currentImageUrl);
@@ -243,10 +247,9 @@
 
         // Функция для создания blob URL и открытия в новом табе
         function openImageAsBlob() {
-            const img = document.getElementById('randomImage');
             const openBlobBtn = document.getElementById('openBlobBtn');
             
-            if (!img) {
+            if (!currentImageElement) {
                 console.log('⚠️ Картинка еще не загружена');
                 return;
             }
@@ -262,11 +265,11 @@
                 const ctx = canvas.getContext('2d');
                 
                 // Устанавливаем размеры canvas равными размерам изображения
-                canvas.width = img.naturalWidth;
-                canvas.height = img.naturalHeight;
+                canvas.width = currentImageElement.naturalWidth;
+                canvas.height = currentImageElement.naturalHeight;
                 
                 // Рисуем изображение на canvas
-                ctx.drawImage(img, 0, 0);
+                ctx.drawImage(currentImageElement, 0, 0);
                 
                 // Конвертируем canvas в blob
                 canvas.toBlob(function(blob) {
@@ -314,14 +317,59 @@
                 
             } catch (error) {
                 console.error('❌ Ошибка при создании blob:', error);
-                openBlobBtn.disabled = false;
-                openBlobBtn.textContent = '❌ Ошибка';
-                openBlobBtn.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
                 
-                setTimeout(() => {
-                    openBlobBtn.textContent = originalText;
-                    openBlobBtn.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
-                }, 3000);
+                if (error.message.includes('tainted') || error.message.includes('cross-origin')) {
+                    console.log('🔄 CORS ошибка - попробуем альтернативный способ...');
+                    
+                    // Альтернативный способ - используем fetch с CORS
+                    fetch(currentImageUrl)
+                        .then(response => response.blob())
+                        .then(blob => {
+                            const blobUrl = URL.createObjectURL(blob);
+                            console.log('🌐 Создан blob URL через fetch:', blobUrl);
+                            
+                            const newWindow = window.open(blobUrl, '_blank');
+                            if (newWindow) {
+                                console.log('✅ Изображение открыто в новом табе (через fetch)');
+                                openBlobBtn.textContent = '✅ Открыто через fetch';
+                                openBlobBtn.style.background = 'linear-gradient(45deg, #4CAF50, #45a049)';
+                                
+                                setTimeout(() => {
+                                    URL.revokeObjectURL(blobUrl);
+                                }, 300000);
+                            } else {
+                                console.error('❌ Не удалось открыть новый таб');
+                                openBlobBtn.textContent = '❌ Блокировка попапов';
+                                openBlobBtn.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
+                            }
+                            
+                            setTimeout(() => {
+                                openBlobBtn.disabled = false;
+                                openBlobBtn.textContent = originalText;
+                                openBlobBtn.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+                            }, 3000);
+                        })
+                        .catch(fetchError => {
+                            console.error('❌ Fetch также не сработал:', fetchError);
+                            openBlobBtn.disabled = false;
+                            openBlobBtn.textContent = '❌ CORS ошибка';
+                            openBlobBtn.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
+                            
+                            setTimeout(() => {
+                                openBlobBtn.textContent = originalText;
+                                openBlobBtn.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+                            }, 3000);
+                        });
+                } else {
+                    openBlobBtn.disabled = false;
+                    openBlobBtn.textContent = '❌ Ошибка';
+                    openBlobBtn.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
+                    
+                    setTimeout(() => {
+                        openBlobBtn.textContent = originalText;
+                        openBlobBtn.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+                    }, 3000);
+                }
             }
         }
 
