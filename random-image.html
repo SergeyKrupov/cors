@@ -114,6 +114,15 @@
             box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
         }
 
+        #openBlobBtn {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        #openBlobBtn:hover {
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+        }
+
         .image-info {
             margin-top: 20px;
             padding: 15px;
@@ -154,6 +163,9 @@
             </button>
             <button id="newImageBtn" onclick="loadNewImage()">
                 🔄 Новая картинка
+            </button>
+            <button id="openBlobBtn" onclick="openImageAsBlob()">
+                🌐 Открыть в новом табе
             </button>
         </div>
 
@@ -229,6 +241,90 @@
             }
         }
 
+        // Функция для создания blob URL и открытия в новом табе
+        function openImageAsBlob() {
+            const img = document.getElementById('randomImage');
+            const openBlobBtn = document.getElementById('openBlobBtn');
+            
+            if (!img) {
+                console.log('⚠️ Картинка еще не загружена');
+                return;
+            }
+            
+            // Показываем индикатор обработки
+            const originalText = openBlobBtn.textContent;
+            openBlobBtn.disabled = true;
+            openBlobBtn.textContent = '⏳ Создание blob...';
+            
+            try {
+                // Создаем canvas и рисуем на нем изображение
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Устанавливаем размеры canvas равными размерам изображения
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
+                
+                // Рисуем изображение на canvas
+                ctx.drawImage(img, 0, 0);
+                
+                // Конвертируем canvas в blob
+                canvas.toBlob(function(blob) {
+                    if (blob) {
+                        // Создаем blob URL
+                        const blobUrl = URL.createObjectURL(blob);
+                        
+                        console.log('🌐 Создан blob URL:', blobUrl);
+                        console.log('📊 Размер blob:', (blob.size / 1024).toFixed(2), 'KB');
+                        console.log('📋 Тип:', blob.type);
+                        
+                        // Открываем в новом табе
+                        const newWindow = window.open(blobUrl, '_blank');
+                        
+                        if (newWindow) {
+                            console.log('✅ Изображение открыто в новом табе');
+                            
+                            // Показываем уведомление об успехе
+                            openBlobBtn.textContent = '✅ Открыто в новом табе';
+                            openBlobBtn.style.background = 'linear-gradient(45deg, #4CAF50, #45a049)';
+                            
+                            // Очищаем blob URL через 5 минут для освобождения памяти
+                            setTimeout(() => {
+                                URL.revokeObjectURL(blobUrl);
+                                console.log('🗑️ Blob URL очищен из памяти');
+                            }, 300000);
+                        } else {
+                            console.error('❌ Не удалось открыть новый таб (возможно, заблокировано браузером)');
+                            openBlobBtn.textContent = '❌ Блокировка попапов';
+                            openBlobBtn.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
+                        }
+                    } else {
+                        console.error('❌ Не удалось создать blob');
+                        openBlobBtn.textContent = '❌ Ошибка создания blob';
+                        openBlobBtn.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
+                    }
+                    
+                    // Восстанавливаем кнопку через 3 секунды
+                    setTimeout(() => {
+                        openBlobBtn.disabled = false;
+                        openBlobBtn.textContent = originalText;
+                        openBlobBtn.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+                    }, 3000);
+                }, 'image/jpeg', 0.9);
+                
+            } catch (error) {
+                console.error('❌ Ошибка при создании blob:', error);
+                openBlobBtn.disabled = false;
+                openBlobBtn.textContent = '❌ Ошибка';
+                openBlobBtn.style.background = 'linear-gradient(45deg, #dc3545, #c82333)';
+                
+                setTimeout(() => {
+                    openBlobBtn.textContent = originalText;
+                    openBlobBtn.style.background = 'linear-gradient(45deg, #28a745, #20c997)';
+                }, 3000);
+            }
+        }
+
         // Загружаем первую картинку при загрузке страницы
         window.addEventListener('load', function() {
             setTimeout(loadNewImage, 500); // Небольшая задержка для плавности
@@ -240,12 +336,15 @@
                 loadNewImage();
             } else if (event.key === 'c' || event.key === 'C' || event.key === 'с' || event.key === 'С') {
                 showImageUrl();
+            } else if (event.key === 'b' || event.key === 'B' || event.key === 'и' || event.key === 'И') {
+                openImageAsBlob();
             }
         });
 
         console.log('🎉 Добро пожаловать! Горячие клавиши:');
         console.log('   R - новая картинка');
         console.log('   C - показать URL текущей картинки');
+        console.log('   B - открыть как blob в новом табе');
     </script>
 </body>
 </html>
