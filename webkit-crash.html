@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebKit Crash Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .warning {
+            background: rgba(255, 0, 0, 0.2);
+            border: 2px solid #ff6b6b;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 30px 0;
+            font-size: 1.1em;
+        }
+        
+        .crash-button {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .crash-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .crash-button:active {
+            transform: translateY(0);
+        }
+        
+        .method-description {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 0.9em;
+            text-align: left;
+        }
+        
+        footer {
+            margin-top: 40px;
+            opacity: 0.7;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚠️ WebKit Crash Test ⚠️</h1>
+        
+        <div class="warning">
+            <strong>ВНИМАНИЕ!</strong><br>
+            Нажатие на кнопки ниже приведет к крашу процесса рендеринга WebKit.<br>
+            Все несохраненные данные в браузере могут быть потеряны!
+        </div>
+        
+        <div class="method-description">
+            <strong>Метод 1: Memory Exhaustion</strong><br>
+            Создает огромные массивы в памяти до исчерпания ресурсов
+        </div>
+        <button class="crash-button" onclick="memoryExhaustionCrash()">
+            💥 Memory Crash
+        </button>
+        
+        <div class="method-description">
+            <strong>Метод 2: Infinite Recursion</strong><br>
+            Запускает бесконечную рекурсию с созданием DOM элементов
+        </div>
+        <button class="crash-button" onclick="recursionCrash()">
+            🔄 Recursion Crash
+        </button>
+        
+        <div class="method-description">
+            <strong>Метод 3: DOM Overflow</strong><br>
+            Создает миллионы DOM элементов одновременно
+        </div>
+        <button class="crash-button" onclick="domOverflowCrash()">
+            📄 DOM Crash
+        </button>
+        
+        <div class="method-description">
+            <strong>Метод 4: Canvas Memory Bomb</strong><br>
+            Создает огромный canvas и пытается заполнить его данными
+        </div>
+        <button class="crash-button" onclick="canvasCrash()">
+            🎨 Canvas Crash
+        </button>
+        
+        <div class="method-description">
+            <strong>Метод 5: Ultimate Crash</strong><br>
+            Комбинирует все методы одновременно для гарантированного краша
+        </div>
+        <button class="crash-button" onclick="ultimateCrash()" style="background: linear-gradient(45deg, #000, #ff0000); font-size: 1.4em;">
+            💀 ULTIMATE CRASH 💀
+        </button>
+        
+        <footer>
+            Создано для тестирования стабильности WebKit<br>
+            Используйте на свой страх и риск!
+        </footer>
+    </div>
+
+    <script>
+        // Метод 1: Исчерпание памяти через создание огромных массивов
+        function memoryExhaustionCrash() {
+            console.log("Запуск Memory Exhaustion краша...");
+            
+            try {
+                // Создаем множество больших массивов
+                let arrays = [];
+                let strings = [];
+                
+                for (let i = 0; i < 1000; i++) {
+                    // Создаем огромные массивы
+                    arrays.push(new Array(10000000).fill(Math.random()));
+                    
+                    // Создаем огромные строки
+                    strings.push('x'.repeat(10000000));
+                    
+                    // Создаем объекты с множеством свойств
+                    let obj = {};
+                    for (let j = 0; j < 100000; j++) {
+                        obj['prop' + j] = new Array(1000).fill(Math.random());
+                    }
+                    arrays.push(obj);
+                }
+            } catch (e) {
+                console.log("Ошибка при исчерпании памяти:", e);
+            }
+        }
+        
+        // Метод 2: Бесконечная рекурсия с созданием DOM элементов
+        function recursionCrash() {
+            console.log("Запуск Recursion краша...");
+            
+            function infiniteRecursion(depth = 0) {
+                // Создаем DOM элементы на каждом уровне рекурсии
+                let div = document.createElement('div');
+                div.innerHTML = 'Depth: ' + depth;
+                div.style.display = 'none';
+                document.body.appendChild(div);
+                
+                // Создаем массивы на каждом уровне
+                let arr = new Array(10000).fill(depth);
+                
+                // Бесконечная рекурсия
+                return infiniteRecursion(depth + 1) + infiniteRecursion(depth + 1);
+            }
+            
+            infiniteRecursion();
+        }
+        
+        // Метод 3: Переполнение DOM
+        function domOverflowCrash() {
+            console.log("Запуск DOM Overflow краша...");
+            
+            // Создаем миллионы DOM элементов
+            for (let i = 0; i < 10000000; i++) {
+                let div = document.createElement('div');
+                div.className = 'crash-element-' + i;
+                div.innerHTML = `<span>Element ${i}</span><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" style="width:${Math.random()*1000}px;height:${Math.random()*1000}px;">`;
+                
+                // Добавляем множество атрибутов
+                for (let j = 0; j < 100; j++) {
+                    div.setAttribute('data-attr-' + j, 'value-' + j + '-' + Math.random());
+                }
+                
+                document.body.appendChild(div);
+                
+                // Создаем event listeners
+                div.addEventListener('click', function() {
+                    console.log('Clicked element', i);
+                });
+            }
+        }
+        
+        // Метод 4: Canvas краш
+        function canvasCrash() {
+            console.log("Запуск Canvas краша...");
+            
+            try {
+                // Создаем множество огромных canvas элементов
+                for (let i = 0; i < 100; i++) {
+                    let canvas = document.createElement('canvas');
+                    canvas.width = 32767; // Максимальный размер
+                    canvas.height = 32767;
+                    canvas.style.display = 'none';
+                    document.body.appendChild(canvas);
+                    
+                    let ctx = canvas.getContext('2d');
+                    
+                    // Пытаемся заполнить весь canvas
+                    let imageData = ctx.createImageData(canvas.width, canvas.height);
+                    for (let j = 0; j < imageData.data.length; j += 4) {
+                        imageData.data[j] = Math.floor(Math.random() * 256);     // R
+                        imageData.data[j + 1] = Math.floor(Math.random() * 256); // G
+                        imageData.data[j + 2] = Math.floor(Math.random() * 256); // B
+                        imageData.data[j + 3] = 255; // A
+                    }
+                    ctx.putImageData(imageData, 0, 0);
+                }
+            } catch (e) {
+                console.log("Canvas ошибка:", e);
+            }
+        }
+        
+        // Метод 5: Ультимативный краш - комбинация всех методов
+        function ultimateCrash() {
+            console.log("🔥 ЗАПУСК УЛЬТИМАТИВНОГО КРАША! 🔥");
+            
+            // Запускаем все методы одновременно
+            setTimeout(memoryExhaustionCrash, 0);
+            setTimeout(recursionCrash, 100);
+            setTimeout(domOverflowCrash, 200);
+            setTimeout(canvasCrash, 300);
+            
+            // Дополнительные краш-методы
+            setTimeout(() => {
+                // Бесконечный цикл
+                while (true) {
+                    document.createElement('div').innerHTML = 'x'.repeat(1000000);
+                }
+            }, 400);
+            
+            setTimeout(() => {
+                // WebGL краш
+                try {
+                    let canvas = document.createElement('canvas');
+                    let gl = canvas.getContext('webgl');
+                    for (let i = 0; i < 10000; i++) {
+                        gl.createTexture();
+                        gl.createBuffer();
+                        gl.createProgram();
+                    }
+                } catch (e) {
+                    console.log("WebGL ошибка:", e);
+                }
+            }, 500);
+            
+            // Показываем предупреждение перед крашем
+            document.body.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                           background: red; color: white; display: flex; align-items: center; 
+                           justify-content: center; font-size: 4em; z-index: 9999;">
+                    💀 CRASHING... 💀
+                </div>
+            `;
+        }
+        
+        // Дополнительный краш при загрузке страницы (закомментировано для безопасности)
+        // window.addEventListener('load', function() {
+        //     console.log("Автоматический краш через 5 секунд...");
+        //     setTimeout(ultimateCrash, 5000);
+        // });
+        
+        console.log("WebKit Crash Test загружен. Будьте осторожны!");
+    </script>
+</body>
+</html>
