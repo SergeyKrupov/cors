@@ -51,9 +51,8 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        #navigateBtn {
+        .btn-navigate {
             padding: 15px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -63,12 +62,27 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        #navigateBtn:hover {
+        #navigateBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        #openNewTabBtn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        .btn-navigate:hover {
             transform: translateY(-2px);
+        }
+
+        #navigateBtn:hover {
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
 
-        #navigateBtn:active {
+        #openNewTabBtn:hover {
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-navigate:active {
             transform: translateY(0);
         }
 
@@ -175,6 +189,15 @@
             background: #5a6268;
         }
 
+        .btn-new-tab {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-new-tab:hover {
+            background: #138496;
+        }
+
         @media (max-width: 600px) {
             .input-group {
                 flex-direction: column;
@@ -204,7 +227,8 @@
                 placeholder="Введите URL для навигации (например: https://google.com)"
                 autocomplete="off"
             >
-            <button id="navigateBtn">Перейти</button>
+            <button id="navigateBtn" class="btn-navigate">Перейти</button>
+            <button id="openNewTabBtn" class="btn-navigate">Новая вкладка</button>
         </div>
 
         <div class="history-section">
@@ -225,6 +249,7 @@
             constructor() {
                 this.urlInput = document.getElementById('urlInput');
                 this.navigateBtn = document.getElementById('navigateBtn');
+                this.openNewTabBtn = document.getElementById('openNewTabBtn');
                 this.historyList = document.getElementById('historyList');
                 this.clearAllBtn = document.getElementById('clearAllBtn');
                 
@@ -238,6 +263,7 @@
 
             bindEvents() {
                 this.navigateBtn.addEventListener('click', () => this.navigate());
+                this.openNewTabBtn.addEventListener('click', () => this.openInNewTab());
                 this.urlInput.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
                         this.navigate();
@@ -247,11 +273,41 @@
             }
 
             navigate() {
+                const fullUrl = this.validateAndPrepareUrl();
+                if (!fullUrl) return;
+
+                // Сохраняем URL в историю
+                this.saveToHistory(fullUrl);
+                
+                // Выполняем навигацию в текущей вкладке
+                try {
+                    window.location.href = fullUrl;
+                } catch (error) {
+                    alert('Ошибка при переходе по URL: ' + error.message);
+                }
+            }
+
+            openInNewTab() {
+                const fullUrl = this.validateAndPrepareUrl();
+                if (!fullUrl) return;
+
+                // Сохраняем URL в историю
+                this.saveToHistory(fullUrl);
+                
+                // Открываем в новой вкладке
+                try {
+                    window.open(fullUrl, '_blank');
+                } catch (error) {
+                    alert('Ошибка при открытии URL в новой вкладке: ' + error.message);
+                }
+            }
+
+            validateAndPrepareUrl() {
                 const url = this.urlInput.value.trim();
                 
                 if (!url) {
                     alert('Пожалуйста, введите URL');
-                    return;
+                    return null;
                 }
 
                 // Добавляем протокол если его нет
@@ -260,15 +316,7 @@
                     fullUrl = 'https://' + url;
                 }
 
-                // Сохраняем URL в историю
-                this.saveToHistory(fullUrl);
-                
-                // Выполняем навигацию
-                try {
-                    window.location.href = fullUrl;
-                } catch (error) {
-                    alert('Ошибка при переходе по URL: ' + error.message);
-                }
+                return fullUrl;
             }
 
             saveToHistory(url) {
@@ -314,6 +362,9 @@
                             <button class="btn-small btn-visit" onclick="urlNavigator.visitUrl('${this.escapeHtml(url)}')">
                                 Перейти
                             </button>
+                            <button class="btn-small btn-new-tab" onclick="urlNavigator.openUrlInNewTab('${this.escapeHtml(url)}')">
+                                Новая вкладка
+                            </button>
                             <button class="btn-small btn-remove" onclick="urlNavigator.removeFromHistory(${index})">
                                 Удалить
                             </button>
@@ -325,6 +376,11 @@
             visitUrl(url) {
                 this.urlInput.value = url;
                 this.navigate();
+            }
+
+            openUrlInNewTab(url) {
+                this.urlInput.value = url;
+                this.openInNewTab();
             }
 
             removeFromHistory(index) {
