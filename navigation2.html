@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Навигатор URL</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        #urlInput {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        #urlInput:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn-navigate {
+            padding: 15px 30px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #navigateBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        #openNewTabBtn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        .btn-navigate:hover {
+            transform: translateY(-2px);
+        }
+
+        #navigateBtn:hover {
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        #openNewTabBtn:hover {
+            box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-navigate:active {
+            transform: translateY(0);
+        }
+
+        .history-section {
+            margin-top: 30px;
+        }
+
+        .history-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            transition: all 0.2s ease;
+        }
+
+        .history-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .history-url {
+            flex: 1;
+            color: #495057;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 14px;
+            word-break: break-all;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-visit {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-visit:hover {
+            background: #218838;
+        }
+
+        .btn-remove {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-remove:hover {
+            background: #c82333;
+        }
+
+        .empty-history {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        .clear-all {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .btn-clear {
+            padding: 8px 20px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s ease;
+        }
+
+        .btn-clear:hover {
+            background: #5a6268;
+        }
+
+        .btn-new-tab {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-new-tab:hover {
+            background: #138496;
+        }
+
+        @media (max-width: 600px) {
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .history-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .history-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌐 Навигатор URL</h1>
+        
+        <div class="input-group">
+            <input 
+                type="url" 
+                id="urlInput" 
+                placeholder="Введите URL для навигации (например: https://google.com)"
+                autocomplete="off"
+            >
+            <button id="navigateBtn" class="btn-navigate">Перейти</button>
+            <button id="openNewTabBtn" class="btn-navigate">Новая вкладка</button>
+        </div>
+
+        <div class="history-section">
+            <div class="history-title">
+                📚 История URL
+            </div>
+            <div id="historyList" class="history-list">
+                <!-- История будет загружена здесь -->
+            </div>
+            <div class="clear-all">
+                <button id="clearAllBtn" class="btn-clear">Очистить всю историю</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class URLNavigator {
+            constructor() {
+                this.urlInput = document.getElementById('urlInput');
+                this.navigateBtn = document.getElementById('navigateBtn');
+                this.openNewTabBtn = document.getElementById('openNewTabBtn');
+                this.historyList = document.getElementById('historyList');
+                this.clearAllBtn = document.getElementById('clearAllBtn');
+                
+                this.init();
+            }
+
+            init() {
+                this.loadHistory();
+                this.bindEvents();
+            }
+
+            bindEvents() {
+                this.navigateBtn.addEventListener('click', () => this.navigate());
+                this.openNewTabBtn.addEventListener('click', () => this.openInNewTab());
+                this.urlInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        this.navigate();
+                    }
+                });
+                this.clearAllBtn.addEventListener('click', () => this.clearAllHistory());
+            }
+
+            navigate() {
+                const fullUrl = this.validateAndPrepareUrl();
+                if (!fullUrl) return;
+
+                // Сохраняем URL в историю
+                this.saveToHistory(fullUrl);
+                
+                // Выполняем навигацию в текущей вкладке
+                try {
+                    window.location.href = fullUrl;
+                } catch (error) {
+                    alert('Ошибка при переходе по URL: ' + error.message);
+                }
+            }
+
+            openInNewTab() {
+                const fullUrl = this.validateAndPrepareUrl();
+                if (!fullUrl) return;
+
+                // Сохраняем URL в историю
+                this.saveToHistory(fullUrl);
+                
+                // Открываем в новой вкладке
+                try {
+                    window.open(fullUrl, '_blank');
+                } catch (error) {
+                    alert('Ошибка при открытии URL в новой вкладке: ' + error.message);
+                }
+            }
+
+            validateAndPrepareUrl() {
+                const url = this.urlInput.value.trim();
+                
+                if (!url) {
+                    alert('Пожалуйста, введите URL');
+                    return null;
+                }
+
+                // Добавляем протокол если его нет
+                let fullUrl = url;
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    fullUrl = 'https://' + url;
+                }
+
+                return fullUrl;
+            }
+
+            saveToHistory(url) {
+                let history = this.getHistory();
+                
+                // Удаляем URL если он уже есть (чтобы переместить в начало)
+                history = history.filter(item => item !== url);
+                
+                // Добавляем в начало списка
+                history.unshift(url);
+                
+                // Ограничиваем количество записей
+                if (history.length > 20) {
+                    history = history.slice(0, 20);
+                }
+                
+                localStorage.setItem('urlHistory', JSON.stringify(history));
+                this.loadHistory();
+            }
+
+            getHistory() {
+                try {
+                    const history = localStorage.getItem('urlHistory');
+                    return history ? JSON.parse(history) : [];
+                } catch (error) {
+                    console.error('Ошибка при загрузке истории:', error);
+                    return [];
+                }
+            }
+
+            loadHistory() {
+                const history = this.getHistory();
+                
+                if (history.length === 0) {
+                    this.historyList.innerHTML = '<div class="empty-history">История пуста. Введите URL и нажмите "Перейти"</div>';
+                    return;
+                }
+
+                this.historyList.innerHTML = history.map((url, index) => `
+                    <div class="history-item">
+                        <div class="history-url">${this.escapeHtml(url)}</div>
+                        <div class="history-actions">
+                            <button class="btn-small btn-visit" onclick="urlNavigator.visitUrl('${this.escapeHtml(url)}')">
+                                Перейти
+                            </button>
+                            <button class="btn-small btn-new-tab" onclick="urlNavigator.openUrlInNewTab('${this.escapeHtml(url)}')">
+                                Новая вкладка
+                            </button>
+                            <button class="btn-small btn-remove" onclick="urlNavigator.removeFromHistory(${index})">
+                                Удалить
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            visitUrl(url) {
+                this.urlInput.value = url;
+                this.navigate();
+            }
+
+            openUrlInNewTab(url) {
+                this.urlInput.value = url;
+                this.openInNewTab();
+            }
+
+            removeFromHistory(index) {
+                let history = this.getHistory();
+                history.splice(index, 1);
+                localStorage.setItem('urlHistory', JSON.stringify(history));
+                this.loadHistory();
+            }
+
+            clearAllHistory() {
+                if (confirm('Вы уверены, что хотите очистить всю историю?')) {
+                    localStorage.removeItem('urlHistory');
+                    this.loadHistory();
+                }
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+        }
+
+        // Инициализируем навигатор
+        const urlNavigator = new URLNavigator();
+    </script>
+</body>
+</html>
