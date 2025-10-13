@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Запись и воспроизведение звука</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #667eea;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            font-size: 16px;
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #recordBtn {
+            background: #ef4444;
+            color: white;
+        }
+
+        #recordBtn:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+        }
+
+        #recordBtn.recording {
+            background: #f59e0b;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        #playBtn {
+            background: #10b981;
+            color: white;
+        }
+
+        #playBtn:hover:not(:disabled) {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        }
+
+        #playBtn:disabled {
+            background: #d1d5db;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            min-height: 20px;
+        }
+
+        .status.info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .recording-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #ef4444;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: blink 1s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .timer {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎙️ Запись звука</h1>
+        
+        <div class="timer" id="timer">00:00</div>
+        
+        <div>
+            <button id="recordBtn">Начать запись</button>
+            <button id="playBtn" disabled>Воспроизвести</button>
+        </div>
+        
+        <div class="status" id="status"></div>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let audioBlob;
+        let audioUrl;
+        let stream;
+        let timerInterval;
+        let recordingStartTime;
+
+        const recordBtn = document.getElementById('recordBtn');
+        const playBtn = document.getElementById('playBtn');
+        const statusDiv = document.getElementById('status');
+        const timerDiv = document.getElementById('timer');
+
+        function updateStatus(message, type = 'info') {
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+        }
+
+        function updateTimer() {
+            const elapsed = Date.now() - recordingStartTime;
+            const seconds = Math.floor(elapsed / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            timerDiv.textContent = `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        }
+
+        function resetTimer() {
+            timerDiv.textContent = '00:00';
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        recordBtn.addEventListener('click', async () => {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                // Остановка записи
+                mediaRecorder.stop();
+                recordBtn.textContent = 'Начать запись';
+                recordBtn.classList.remove('recording');
+                resetTimer();
+                
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+            } else {
+                // Начало записи
+                try {
+                    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    audioChunks = [];
+                    
+                    mediaRecorder = new MediaRecorder(stream);
+                    
+                    mediaRecorder.ondataavailable = (event) => {
+                        audioChunks.push(event.data);
+                    };
+                    
+                    mediaRecorder.onstop = () => {
+                        audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        audioUrl = URL.createObjectURL(audioBlob);
+                        playBtn.disabled = false;
+                        updateStatus('Запись завершена! Теперь можно воспроизвести.', 'success');
+                    };
+                    
+                    mediaRecorder.start();
+                    recordingStartTime = Date.now();
+                    timerInterval = setInterval(updateTimer, 100);
+                    
+                    recordBtn.textContent = 'Остановить запись';
+                    recordBtn.classList.add('recording');
+                    updateStatus('Идет запись...', 'info');
+                    playBtn.disabled = true;
+                    
+                } catch (error) {
+                    console.error('Ошибка доступа к микрофону:', error);
+                    updateStatus('Ошибка: не удалось получить доступ к микрофону', 'error');
+                }
+            }
+        });
+
+        playBtn.addEventListener('click', () => {
+            if (audioUrl) {
+                const audio = new Audio(audioUrl);
+                audio.play();
+                updateStatus('Воспроизведение...', 'info');
+                
+                audio.onended = () => {
+                    updateStatus('Воспроизведение завершено', 'success');
+                };
+            }
+        });
+
+        // Начальное сообщение
+        updateStatus('Нажмите "Начать запись" для записи звука', 'info');
+    </script>
+</body>
+</html>
+
