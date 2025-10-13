@@ -163,11 +163,32 @@
         let stream;
         let timerInterval;
         let recordingStartTime;
+        let mimeType;
 
         const recordBtn = document.getElementById('recordBtn');
         const playBtn = document.getElementById('playBtn');
         const statusDiv = document.getElementById('status');
         const timerDiv = document.getElementById('timer');
+
+        // Определяем поддерживаемый MIME тип
+        function getSupportedMimeType() {
+            const types = [
+                'audio/webm;codecs=opus',
+                'audio/webm',
+                'audio/ogg;codecs=opus',
+                'audio/mp4',
+                'audio/mpeg'
+            ];
+            
+            for (const type of types) {
+                if (MediaRecorder.isTypeSupported(type)) {
+                    console.log('Используется MIME тип:', type);
+                    return type;
+                }
+            }
+            
+            return ''; // Браузер сам выберет
+        }
 
         function updateStatus(message, type = 'info') {
             statusDiv.textContent = message;
@@ -204,23 +225,55 @@
             } else {
                 // Начало записи
                 try {
-                    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    stream = await navigator.mediaDevices.getUserMedia({ 
+                        audio: {
+                            echoCancellation: true,
+                            noiseSuppression: true,
+                            sampleRate: 44100
+                        } 
+                    });
                     audioChunks = [];
                     
-                    mediaRecorder = new MediaRecorder(stream);
+                    // Определяем поддерживаемый MIME тип
+                    mimeType = getSupportedMimeType();
+                    
+                    // Создаем MediaRecorder с опциями
+                    const options = mimeType ? { mimeType } : {};
+                    mediaRecorder = new MediaRecorder(stream, options);
+                    
+                    console.log('MediaRecorder создан с MIME типом:', mediaRecorder.mimeType);
                     
                     mediaRecorder.ondataavailable = (event) => {
-                        audioChunks.push(event.data);
+                        if (event.data.size > 0) {
+                            audioChunks.push(event.data);
+                            console.log('Получен чанк данных:', event.data.size, 'байт');
+                        }
                     };
                     
                     mediaRecorder.onstop = () => {
-                        audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                        console.log('Запись остановлена, количество чанков:', audioChunks.length);
+                        
+                        // Используем MIME тип из mediaRecorder
+                        audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType });
+                        console.log('Создан blob размером:', audioBlob.size, 'байт');
+                        
+                        if (audioBlob.size === 0) {
+                            updateStatus('Ошибка: не удалось записать звук', 'error');
+                            return;
+                        }
+                        
                         audioUrl = URL.createObjectURL(audioBlob);
                         playBtn.disabled = false;
-                        updateStatus('Запись завершена! Теперь можно воспроизвести.', 'success');
+                        updateStatus(`Запись завершена! Размер: ${(audioBlob.size / 1024).toFixed(2)} КБ`, 'success');
                     };
                     
-                    mediaRecorder.start();
+                    mediaRecorder.onerror = (event) => {
+                        console.error('Ошибка MediaRecorder:', event.error);
+                        updateStatus('Ошибка при записи: ' + event.error, 'error');
+                    };
+                    
+                    // Запускаем запись, собирая данные каждые 100мс
+                    mediaRecorder.start(100);
                     recordingStartTime = Date.now();
                     timerInterval = setInterval(updateTimer, 100);
                     
@@ -231,7 +284,7 @@
                     
                 } catch (error) {
                     console.error('Ошибка доступа к микрофону:', error);
-                    updateStatus('Ошибка: не удалось получить доступ к микрофону', 'error');
+                    updateStatus('Ошибка: ' + error.message, 'error');
                 }
             }
         });
@@ -239,8 +292,18 @@
         playBtn.addEventListener('click', () => {
             if (audioUrl) {
                 const audio = new Audio(audioUrl);
-                audio.play();
-                updateStatus('Воспроизведение...', 'info');
+                
+                audio.onerror = (e) => {
+                    console.error('Ошибка воспроизведения:', e);
+                    updateStatus('Ошибка воспроизведения', 'error');
+                };
+                
+                audio.play().then(() => {
+                    updateStatus('Воспроизведение...', 'info');
+                }).catch(err => {
+                    console.error('Не удалось воспроизвести:', err);
+                    updateStatus('Ошибка: ' + err.message, 'error');
+                });
                 
                 audio.onended = () => {
                     updateStatus('Воспроизведение завершено', 'success');
